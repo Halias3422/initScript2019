@@ -1,0 +1,7 @@
+Effectuer la commande "host slash16.org"
+recuperer une adresse affichee et l'associer a la commande whois
+ex : "whois 143.204.222.8"
+
+On constate alors que l'hebergeur est Amazon
+
+On peut egalement trouver l'hebergeur sur internet grace a des sites tel "https://hostadvice.com/tools/whois/#slash16.org"

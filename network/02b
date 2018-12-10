@@ -1,0 +1,1 @@
+ping -c 2 10.3.255.255 | grep from | cut -d ' ' -f4 | sed 's/://g'
