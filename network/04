@@ -1,1 +1,1 @@
-netstat -nr | awk '/default/{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6}'
+netstat -nr | awk '/default/ || /Destination/ || /Internet/{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6 "\t" $7}'
