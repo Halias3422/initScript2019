@@ -1,1 +1,1 @@
-ping -c 2 10.3.255.255 | grep from | cut -d ' ' -f4 | sed 's/://g'
+ping -c 2 $(ifconfig en0 | grep broadcast | cut -d ' ' -f6) | grep seq=0 | cut -d ' ' -f4 | sed 's/://g'
