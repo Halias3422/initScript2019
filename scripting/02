@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#Check that valid argument wa entered
+if [ "$#" -ne 1 ]; then
+	echo "usage: ./02 USERNAME"
+	exit 0
+fi
+
+#verifier si argument correspond a un utilisateur existant
+if [ -z "$(cat /etc/passwd | grep "$1:")" ]; then
+	echo "User "$1" does not exist"
+	exit 0
+fi
+
+#verifier si argument correspond a utilisateur connecte
+if [ -z "$(who | grep "$1 ")" ]; then
+	echo "User "$1" is not logged in"
+	exit 0
+fi
+
+#bloquer compte de l'utilisateur
+sudo passwd -l "$1"
+
+#fermer les programmes lances par l'utilisateur
+PID="$(pgrep -u "$1" | wc | cut -b -7 | sed "s/ //g)"
+echo "${PID}"
+exit 0
+#if [ pgrep -u $"1"p]; then
+#	sudo killall -KILL -u "$1"
+#fi
+#supprimer l'utilisateur
+
+#supprimer taches cron
