@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#Enter username
+echo -n "Enter your gitlab USERNAME: "
+read username
+
+#ask which repo you want
+echo -n "Which gitlab repo do you want to clone ? : "
+read reponame
+
+#ask where you want to put it
+echo -n "Where do you want to clone the repo ? : "
+read repolocation
+
+#check if the location exists
+if [ ! -d "$repolocation" ]; then
+	echo "This location does not exist"
+	echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
+	read answer
+	if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
+		mkdir "$repolocation"
+		echo "created "$repolocation" "
+	elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
+		echo "Make up your mind I'm a busy person ! (exiting...)"
+		exit 0
+	else
+		echo "Wrong answer, learn how to read ! {exiting...)"
+	fi
+	
+fi
+
+#ask repo_directory name
+echo -n "How do you want to call your cloned repo directory ? : "
+read dirname
+echo "${reponame}"
+
+#clone the repo in the selected location
+cd $repolocation | git clone https://gitlab.com/"$username"/"$reponame".git ${dirname} | cd -
