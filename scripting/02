@@ -6,29 +6,29 @@ if [ "$#" -ne 1 ]; then
 	exit 0
 fi
 
-#verifier si argument correspond a un utilisateur existant
+#Check that argument corresponds to an existing user
 if [ -z "$(cat /etc/passwd | grep "$1:")" ]; then
 	echo "User "$1" does not exist"
 	exit 0
 fi
 
-#verifier si argument correspond a utilisateur connecte
+#Check that argument corresponds to a logged user
 if [ -z "$(who | grep "$1 ")" ]; then
 	echo "User "$1" is not logged in"
 	exit 0
 fi
 
-#bloquer compte de l'utilisateur
+#Block user
 sudo passwd -l "$1"
 
-#fermer les programmes lances par l'utilisateur
+#Close processus launched by the user
 PID="$(pgrep -u "$1" | wc | cut -b -7 | sed "s/ //g")"
 if [ ${PID} != 0 ]; then
 	sudo killall -KILL -u "$1"
 fi
 
-#supprimer taches cron
+#Delete cron tasks
 sudo crontab -r -u "$1"
 
-#supprimer l'utilisateur
+#Delete the user
 sudo userdel -r "$1"
