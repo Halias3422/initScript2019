@@ -1,38 +1,97 @@
 #!/bin/bash
 
-#Enter username
-echo -n "Enter your gitlab USERNAME: "
-read username
+#Determine behavior of program
+echo -n "Which type of user are you ? (pro/noob/man) : "
+read usertype
 
-#ask which repo you want
-echo -n "Which gitlab repo do you want to clone ? : "
-read reponame
+#USERTYPE == PRO
+if [ "$usertype" == "pro" ] || [ "$usertype" == "p" ]; then
+	echo "usage: USERNAME  ORIG_REPONAME  REPOLOCATION  CREATE?(Y\N)  NEW_REPONAME"
+	touch gitlab_script_datas
+	read datas
+	echo ${datas} > gitlab_script_datas
+	verifdata=$(cat gitlab_script_datas | wc | cut -b 15)
+	echo ""$verifdata""
+	datausername=$(cat gitlab_script_datas | cut -d ' ' -f1)
+	dataorig_reponame=$(cat gitlab_script_datas | cut -d ' ' -f2)
+	datarepolocation=$(cat gitlab_script_datas | cut -d ' ' -f3)
+	datanew_reponame1=$(cat gitlab_script_datas | cut -d ' ' -f4)
+	datacreate=$(cat gitlab_script_datas | cut -d ' ' -f4)
+	datanew_reponame2=$(cat gitlab_script_datas | cut -d ' ' -f5)
 
-#ask where you want to put it
-echo -n "Where do you want to clone the repo ? : "
-read repolocation
+#if 4 parameters entered (the dest dir already exists)
+	if [ "$verifdata" == "4" ]; then
+		if [ ! -d "$datarepolocation" ]; then
+			echo "Wrong input -- The REPOLOCATION doesn't exist. (exiting...)"
+			rm gitlab_script_datas
+			exit 0
+		else
+			cd $datarepolocation | git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame1} | cd -
+			rm gitlab_script_datas
+		fi
 
-#check if the location exists
-if [ ! -d "$repolocation" ]; then
-	echo "This location does not exist"
-	echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
-	read answer
-	if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
-		mkdir "$repolocation"
-		echo "created "$repolocation" "
-	elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
-		echo "Make up your mind I'm a busy person ! (exiting...)"
-		exit 0
-	else
-		echo "Wrong answer, learn how to read ! {exiting...)"
+#if 5 parameters entered (the dest dir does not exist)
+	elif [ "$verifdata" == "5" ]; then
+		if [ "$datacreate" == "y" ] || [ "$datacreate" == "yes" ]; then
+			mkdir "$repolocation"
+		else
+			exit 0
+		fi
+		cd $datarepolocation | git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame2} | cd -
+		rm gitlab_script_datas
 	fi
-	
+
+#USERTYPE == NOOB
+elif [ "$usertype" == "noob" ] || [ "$usertype" == "n" ]; then
+	#Enter username
+	echo -n "Enter your gitlab USERNAME: "
+	read username
+
+	#ask which repo you want
+	echo -n "Which gitlab repo do you want to clone ? : "
+	read reponame
+
+	#ask where you want to put it
+	echo -n "Where do you want to clone the repo ? : "
+	read repolocation
+
+	#check if the location exists
+	if [ ! -d "$repolocation" ]; then
+		echo "This location does not exist"
+		echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
+		read answer
+		if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
+			mkdir "$repolocation"
+			echo "created "$repolocation" "
+		elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
+			echo "Make up your mind I'm a busy person ! (exiting...)"
+			exit 0
+		else
+			echo "Wrong answer, learn how to read ! (exiting...)"
+		fi
+	fi
+
+	#ask repo_directory name
+	echo -n "How do you want to call your cloned repo directory ? : "
+	read dirname
+	echo "${reponame}"
+
+	#clone the repo in the selected location
+	cd $repolocation | git clone https://gitlab.com/"$username"/"$reponame".git ${dirname} | cd -
+
+#USERTYPE == MAN
+elif [ "$usertype" == "man" ] || [ "$usertype" == "m" ]; then
+	echo $'			   ----GITLAB_SUPERSCRIPT----'
+	echo $'\n\nThis Amazing Script allows you to easily and quickly clone any of your existing gitlab repos anywhere you want on your system.'
+	echo $'\nThere are two possible ways to use this script :'
+	echo $'\n	1.pro : faster but more complicated, you type all the datas in a single command.'
+	echo $'		usage: USERNAME  ORIG_REPONAME  REPOLOCATION  CREATE?(y/n)  NEW_REPONAME'
+	echo $'\n\n	2.noob : slower but easier, you will be guided all the way to create the perfect repo'
+	echo -n $'\n\nDo you want more information about the pro usage ? (y/n) : '
+	read proanswer
+	if [ "$proanswer" == "y" ] || [ "$proanswer" == "yes" ]; then
+		echo $'\nUSERNAME = your gitlab login\nORIG_REPONAME = the name of the gitlab repo you want to clone\nREPOLOCATION = the location where you want to clone the repo\nCREATE?(y/n) = if the REPOLOCATION entered doesn\'t exist do you want to create it? (exiting if no) If the REPOLOCATION already exists, skip this step.\nNEW_REPONAME = the name of the gitlab repo you will create'
+	fi
+else
+	echo "Are you really that dumb ? (exiting...)"
 fi
-
-#ask repo_directory name
-echo -n "How do you want to call your cloned repo directory ? : "
-read dirname
-echo "${reponame}"
-
-#clone the repo in the selected location
-cd $repolocation | git clone https://gitlab.com/"$username"/"$reponame".git ${dirname} | cd -
