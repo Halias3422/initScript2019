@@ -22,12 +22,13 @@ fi
 sudo passwd -l "$1"
 
 #fermer les programmes lances par l'utilisateur
-PID="$(pgrep -u "$1" | wc | cut -b -7 | sed "s/ //g)"
-echo "${PID}"
-exit 0
-#if [ pgrep -u $"1"p]; then
-#	sudo killall -KILL -u "$1"
-#fi
-#supprimer l'utilisateur
+PID="$(pgrep -u "$1" | wc | cut -b -7 | sed "s/ //g")"
+if [ ${PID} != 0 ]; then
+	sudo killall -KILL -u "$1"
+fi
 
 #supprimer taches cron
+sudo crontab -r -u "$1"
+
+#supprimer l'utilisateur
+sudo userdel -r "$1"
