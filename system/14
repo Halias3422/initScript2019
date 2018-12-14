@@ -1,0 +1,1 @@
+sudo tail -f /var/log/syslog 2>&1 > /dev/null &

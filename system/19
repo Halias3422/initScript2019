@@ -1,0 +1,24 @@
+/etc/rc0.d:
+K01hwclock.sh  K01lightdm  K01networking  K01rsyslog
+
+/etc/rc1.d:
+K01lightdm  K01rsyslog
+
+/etc/rc2.d:
+S01console-setup.sh  S01cron  S01dbus  S01lightdm  S01rsync  S01rsyslog  S01ssh
+
+/etc/rc3.d:
+S01console-setup.sh  S01cron  S01dbus  S01lightdm  S01rsync  S01rsyslog  S01ssh
+
+/etc/rc4.d:
+S01console-setup.sh  S01cron  S01dbus  S01lightdm  S01rsync  S01rsyslog  S01ssh
+
+/etc/rc5.d:
+S01console-setup.sh  S01cron  S01dbus  S01lightdm  S01rsync  S01rsyslog  S01ssh
+
+/etc/rc6.d:
+K01hwclock.sh  K01lightdm  K01networking  K01rsyslog
+
+/etc/rcS.d:
+S01hwclock.sh  S01keyboard-setup.sh  S01kmod  S01networking  S01procps  S01udev  S01x11-common
+(ls /etc/rc*.c)
