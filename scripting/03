@@ -45,8 +45,8 @@ elif [ "$#" == 1 ] && [ "$1" == '-n' ] || [ "$1" == "-noob" ]; then
     #If argument is -p -> PRO USAGE
 elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
     echo "usage: USERNAME  ORIG_REPONAME  REPOLOCATION  OPT((CREATE?(y/n))  NEW_REPONAME"
-    touch gitlab_script_datas
     read datas
+	touch gitlab_script_datas
     echo ${datas} > gitlab_script_datas
     verifdata=$(cat gitlab_script_datas | wc | cut -b 15)
     datausername=$(cat gitlab_script_datas | cut -d ' ' -f1)
@@ -81,8 +81,8 @@ elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
     #if argument is -i -> INIT REPO
 elif [ "$#" == 1 ] && [ "$1" == "-i" ] || [ "$1" == "-init" ]; then
     echo "usage: USERNAME REPOLOCATION REPONAME"
-    touch repo_init_datas
     read init_datas
+	touch repo_init_datas
     echo "$init_datas" > repo_init_datas
     init_username=$(cat repo_init_datas | cut -d ' ' -f1)
     init_repolocation=$(cat repo_init_datas | cut -d ' ' -f2 | sed "s|~|${HOME}|g")
