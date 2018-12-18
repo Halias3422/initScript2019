@@ -1,0 +1,104 @@
+#!/bin/bash
+
+#If no argument is entered or a wrong argument is entered -> USAGE
+if [ "$#" == 0 ] || ([ "$#" == 1 ] && [ "$1" != "-n" ] && [ "$1" != "-noob" ] && [ "$1" != "-p" ] && [ "$1" != "-pro" ] && [ "$1" != "-i" ] && [ "$1" != "-init" ]); then
+    echo -e "			   ----GITLAB_SUPERSCRIPT----\n\nThis amazing script allows you to easily clone any of your existing gitlab repos anywhere you want on your system and also to create a fresh gitlab repo already containing a \"auteur\" file and a full libft (change the name of the libft repo in the script to use your own libft)\n\nThere are two possible ways to use this script to clone a repo:\n\n	1.pro (-p) : faster but more complicated, you type all the datas necessary in a single command.\n	usage : USERNAME  ORIG_REPONAME  REPOLOCATION  OPT(CREATE?(y/n))  NEW_REPONAME\n\n	2.noob (-n) : slower but easier, you will be guided all the way to clone the perfect repo\n\nTo create a fresh repo use the option "-i"\n	usage : USERNAME  REPOLOCATION  REPONAME\n\nUSERNAME = your gitlablogin\nORIG_REPONAME = the name of the gitlab repo you want to clone\nREPOLOCATION = the location where you want to clone the repo\nOPT(CREATE?(y/n)) = OPTIONNAL - if the REPOLOCATION entered doesn\'t exist, do you want to create it? (exiting if no). If the REPOLOCATION already exists, skip this step.\nNEW_REPONAME = the name of the gitlab repo you will create"
+
+    #If one argument -n is entered -> NOOB USAGE
+elif [ "$#" == 1 ] && [ "$1" == '-n' ] || [ "$1" == "-noob" ]; then
+    #Enter username
+    echo -n "Enter your gitlab USERNAME: "
+    read username
+    
+    #ask which repo you want
+    echo -n "Which gitlab repo do you want to clone ? : "
+    read reponame
+
+    #ask where you want to put it
+    echo -n "Where do you want to clone the repo ? : "
+    read repolocation
+    repolocation=$(echo "$repolocation" | sed "s|~|${HOME}|g")
+    #check if the location exists
+    if [ ! -d "$repolocation" ]; then
+	echo "This location does not exist"
+	echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
+	read answer
+	if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
+	    mkdir "$repolocation"
+	    echo "created "$repolocation" "
+	elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
+	    echo "Make up your mind I'm a busy person ! (exiting...)"
+	    exit 0
+	else
+	    echo "Wrong answer, learn how to read ! (exiting...)"
+	fi
+    fi
+
+    #ask repo_directory name
+    echo -n "How do you want to call your cloned repo directory ? : "
+    read dirname
+    echo "${reponame}"g
+
+    #clone the repo in the selected location
+    cd $repolocation && git clone https://gitlab.com/"$username"/"$reponame".git ${dirname} && cd -
+
+    #If argument is -p -> PRO USAGE
+elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
+    echo "usage: USERNAME  ORIG_REPONAME  REPOLOCATION  OPT((CREATE?(y/n))  NEW_REPONAME"
+    read datas
+	touch gitlab_script_datas
+    echo ${datas} > gitlab_script_datas
+    verifdata=$(cat gitlab_script_datas | wc | cut -b 15)
+    datausername=$(cat gitlab_script_datas | cut -d ' ' -f1)
+    dataorig_reponame=$(cat gitlab_script_datas | cut -d ' ' -f2)
+    datarepolocation=$(cat gitlab_script_datas | cut -d ' ' -f3 | sed "s|~|${HOME}|g")
+    datanew_reponame1=$(cat gitlab_script_datas | cut -d ' ' -f4)
+    datacreate=$(cat gitlab_script_datas | cut -d ' ' -f4)
+    datanew_reponame2=$(cat gitlab_script_datas | cut -d ' ' -f5)
+    
+    #if 4 parameters entered (the dest dir already exists)
+    if [ "$verifdata" == "4" ]; then
+		if [ ! -d "$datarepolocation" ]; then
+		    echo "Wrong input -- The REPOLOCATION doesn't exist. (exiting...)"
+		    rm gitlab_script_datas
+		    exit 0
+		else
+		    cd "$datarepolocation" && git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame1} && cd -
+		    rm gitlab_script_datas
+		fi
+	
+	#if 5 parameters entered (the dest dir does not exist)
+    elif [ "$verifdata" == "5" ]; then
+		if [ "$datacreate" == "y" ] || [ "$datacreate" == "yes" ]; then
+		    mkdir "$datarepolocation"
+		else
+		    exit 0
+		fi
+		cd "$datarepolocation" && git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame2} && cd -
+		rm gitlab_script_datas
+    fi
+    
+    #if argument is -i -> INIT REPO
+elif [ "$#" == 1 ] && [ "$1" == "-i" ] || [ "$1" == "-init" ]; then
+    echo "usage: USERNAME REPOLOCATION REPONAME"
+    read init_datas
+	touch repo_init_datas
+    echo "$init_datas" > repo_init_datas
+    init_username=$(cat repo_init_datas | cut -d ' ' -f1)
+    init_repolocation=$(cat repo_init_datas | cut -d ' ' -f2 | sed "s|~|${HOME}|g")
+    init_reponame=$(cat repo_init_datas | cut -d ' ' -f3)
+
+	#Change this variable to put your libft repo name
+	init_libftrepo="actual_libft"
+    if [ ! -d "$init_repolocation" ]; then
+	echo -n "The REPOLOCATION doesn-t exist, do you want to create it ? (y/n): "
+	read init_answer
+		if [ "$init_answer" == "n" ] || [ "$init_answer" == "no" ]; then
+		    echo "Please stop waisting my time ... (exiting...)"
+		elif [ "$init_answer" == "y" ] || [ "$init_answer" == "yes" ]; then
+		    mkdir "$init_repolocation"
+		fi
+	fi
+	cd "$init_repolocation" && git init "$init_reponame" && cd "$init_reponame" && echo ${USER} > auteur && git clone https://gitlab.com/"$init_username"/"$init_libftrepo".git libft && git add * && git commit -m "initialization" && git push --set-upstream https://gitlab.com/"$init_username"/"$init_reponame".git master && cd -
+	rm repo_init_datas
+fi
