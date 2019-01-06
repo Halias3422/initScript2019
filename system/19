@@ -22,3 +22,5 @@ K01hwclock.sh  K01lightdm  K01networking  K01rsyslog
 /etc/rcS.d:
 S01hwclock.sh  S01keyboard-setup.sh  S01kmod  S01networking  S01procps  S01udev  S01x11-common
 (ls /etc/rc*.c)
+
+On appelle ces services "daemons"

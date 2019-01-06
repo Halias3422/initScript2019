@@ -2,6 +2,6 @@ Pour se connecter sur la session graphique:
 
 taper su 'USERNAME' -> exemple : su guest
 
-Pour se connecterer sur la session ssh:
+Pour se connecter sur la session ssh:
 
 taper ssh USERNAME@ip_machine
