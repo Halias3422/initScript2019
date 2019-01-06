@@ -47,24 +47,24 @@ elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
     echo "usage: USERNAME  ORIG_REPONAME  REPOLOCATION  OPT((CREATE?(y/n))  NEW_REPONAME"
     read datas
 	touch gitlab_script_datas
-    echo ${datas} > gitlab_script_datas
-    verifdata=$(cat gitlab_script_datas | wc | cut -b 15)
+    echo "$datas" > gitlab_script_datas
+	verifdata=$(echo $(cat gitlab_script_datas | wc) | cut -d ' ' -f2)
     datausername=$(cat gitlab_script_datas | cut -d ' ' -f1)
     dataorig_reponame=$(cat gitlab_script_datas | cut -d ' ' -f2)
     datarepolocation=$(cat gitlab_script_datas | cut -d ' ' -f3 | sed "s|~|${HOME}|g")
     datanew_reponame1=$(cat gitlab_script_datas | cut -d ' ' -f4)
     datacreate=$(cat gitlab_script_datas | cut -d ' ' -f4)
     datanew_reponame2=$(cat gitlab_script_datas | cut -d ' ' -f5)
-    
     #if 4 parameters entered (the dest dir already exists)
     if [ "$verifdata" == "4" ]; then
+		echo "helloaaaaaaaaaaaaaa"
 		if [ ! -d "$datarepolocation" ]; then
 		    echo "Wrong input -- The REPOLOCATION doesn't exist. (exiting...)"
-		    rm gitlab_script_datas
+		    rm -f gitlab_script_datas
 		    exit 0
 		else
 		    cd "$datarepolocation" && git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame1} && cd -
-		    rm gitlab_script_datas
+		    rm -f gitlab_script_datas
 		fi
 	
 	#if 5 parameters entered (the dest dir does not exist)
@@ -75,7 +75,7 @@ elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
 		    exit 0
 		fi
 		cd "$datarepolocation" && git clone https://gitlab.com/"$datausername"/"$dataorig_reponame".git ${datanew_reponame2} && cd -
-		rm gitlab_script_datas
+		rm -f gitlab_script_datas
     fi
     
     #if argument is -i -> INIT REPO
@@ -99,6 +99,6 @@ elif [ "$#" == 1 ] && [ "$1" == "-i" ] || [ "$1" == "-init" ]; then
 		    mkdir "$init_repolocation"
 		fi
 	fi
+	rm -f repo_init_datas
 	cd "$init_repolocation" && git init "$init_reponame" && cd "$init_reponame" && echo ${USER} > auteur && git clone https://gitlab.com/"$init_username"/"$init_libftrepo".git libft && git add * && git commit -m "initialization" && git push --set-upstream https://gitlab.com/"$init_username"/"$init_reponame".git master && cd -
-	rm repo_init_datas
 fi
