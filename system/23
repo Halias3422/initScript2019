@@ -4,4 +4,4 @@ taper su 'USERNAME' -> exemple : su guest
 
 Pour se connecter sur la session ssh:
 
-taper ssh USERNAME@ip_machine
+taper ssh USERNAME@ip_machine -p 2222
