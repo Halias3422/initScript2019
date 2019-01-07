@@ -1,3 +1,1 @@
-le nom du materiel qui fait le lien entre le reseau local et l'exterieur est le NAT (Network address translation) Son ip est : 10.60.1.1
-
-(traceroute 42.fr puis nslookup nat pour verifier)
+le nom du materiel qui fait le lien entre le reseau local et l'exterieur est le NAT (Network address translation) Son ip est : 185.15.27.33

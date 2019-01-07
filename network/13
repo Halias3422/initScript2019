@@ -1,4 +1,5 @@
 Server:		10.51.1.5
 Address:	10.51.1.5#53
 
-3.8.3.10.in-addr.arpa	name = z3r8p3.le-101.fr.
+4.7.3.10.in-addr.arpa	name = z3r7p4.le-101.fr.
+(nslookup 10.3.7.4)
