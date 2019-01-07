@@ -20,24 +20,24 @@ elif [ "$#" == 1 ] && [ "$1" == '-n' ] || [ "$1" == "-noob" ]; then
     repolocation=$(echo "$repolocation" | sed "s|~|${HOME}|g")
     #check if the location exists
     if [ ! -d "$repolocation" ]; then
-	echo "This location does not exist"
-	echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
-	read answer
-	if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
-	    mkdir "$repolocation"
-	    echo "created "$repolocation" "
-	elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
-	    echo "Make up your mind I'm a busy person ! (exiting...)"
-	    exit 0
-	else
-	    echo "Wrong answer, learn how to read ! (exiting...)"
-	fi
+		echo "This location does not exist"
+		echo -n "Do you want to create the directory "$repolocation" ? (y/n) : "
+		read answer
+		if [ "$answer" == "y" ] || [ "$answer" == "yes" ]; then
+		    mkdir "$repolocation"
+		    echo "created "$repolocation" "
+		elif [ "$answer" == "n" ] || [ "$answer" == "no" ]; then
+		    echo "Make up your mind I'm a busy person ! (exiting...)"
+		    exit 0
+		else
+		    echo "Wrong answer, learn how to read ! (exiting...)"
+		fi
     fi
 
     #ask repo_directory name
     echo -n "How do you want to call your cloned repo directory ? : "
     read dirname
-    echo "${reponame}"g
+    echo "${reponame}"
 
     #clone the repo in the selected location
     cd $repolocation && git clone https://gitlab.com/"$username"/"$reponame".git ${dirname} && cd -
@@ -57,7 +57,6 @@ elif [ "$#" == 1 ] && [ "$1" == "-p" ] || [ "$1" == "-pro" ]; then
     datanew_reponame2=$(cat gitlab_script_datas | cut -d ' ' -f5)
     #if 4 parameters entered (the dest dir already exists)
     if [ "$verifdata" == "4" ]; then
-		echo "helloaaaaaaaaaaaaaa"
 		if [ ! -d "$datarepolocation" ]; then
 		    echo "Wrong input -- The REPOLOCATION doesn't exist. (exiting...)"
 		    rm -f gitlab_script_datas
